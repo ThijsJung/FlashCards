@@ -1,7 +1,8 @@
 .container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: 100px;
+    grid-template-rows: repeat(7, 1fr);
+    grid-auto-rows: 300px;
 }
 
 .card_section {
@@ -9,14 +10,38 @@
     border: 1px solid blue;
 }
 
+
 #card_box {
-    grid-column-start: 1; 
+    grid-column-start: 1;
     grid-column-end: 4;
     grid-row-start: 1; 
-    grid-row-end: 3;
+    grid-row-end: 6;
+}
+
+.bottom {
+    grid-row-start: 6;
+    grid-row-end: 8;
+}
+
+#incorrect {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+#turn_card_over {
+    grid-column-start: 2;
+    grid-column-end: 3;
+
+}
+
+#correct {
+    grid-column-start: 3;
+    grid-column-end: 4;
+
 }
 
 .navigate_card {
+    /* padding: 50px; */
     width: 98;
     height: 98;
 }
