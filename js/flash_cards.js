@@ -36,13 +36,13 @@ var incorrectAnswers = [];
 
 function load_card(index, side){
     let cardData = deckData[index];
-    let card_content_el = document.getElementById("card_box");
-    card_content_el.innerHTML = "";
+    let card_title = document.getElementById("card_title");
+    card_title.innerHTML = "";
     let card_content = cardData.front.content.title;
     if(side === "back"){
         card_content = cardData.back.content.title;
     }
-    card_content_el.innerHTML = card_content;
+    card_title.innerHTML = card_content;
 }
 
 function turnCardOver(){

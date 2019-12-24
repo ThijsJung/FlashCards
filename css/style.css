@@ -18,6 +18,7 @@
     grid-row-start: 1; 
     grid-row-end: 3;
     height: 500px;
+    line-height: 500px;
 }
 
 .bottom {
