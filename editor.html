@@ -32,39 +32,28 @@
         <div>
             <button type="button" id="save_deck_button">Save deck</button>
         </div>
-        <div id="new_deck"></div>
+        <div id="saved_deck"></div>
 
-        <template id="card_template">
-            <tr>
-                <td class="front_side" data-attribute-name="type">
-                    <select id="front_card_select">
-                        <option value="text">Text</option>
-                        <option value="image">Image</option>
-                    </select>
-                </td>
-                <td class="front_side" data-attribute-name="title">
-                    <input name="front_title" required>
-                </td>
-                <td class="front_side" data-attribute-name="description">
-                    <input name="front_description">
-                </td>
-                <td class="back_side" data-attribute-name="type">
-                    <select id="back_card_select">
-                        <option value="text">Text</option>
-                        <option value="image">Image</option>
-                    </select>
-                </td>
-                <td class="back_side" data-attribute-name="title">
-                    <input name="back_title" required>
-                </td>
-                <td class="back_side" data-attribute-name="description">
-                    <input name="back_description">
-                </td>
-                <td>
-                    <button type="button">
-                        <img width="12" height="12" src="img/delete-bin-64px.png" alt="Delete ingredient">
-                    </button>
-                </td>
-            </tr>
+        <template id="card_side_template">
+            <td class="front_side" data-attribute-name="type">
+                <select id="front_type">
+                    <option value="text">Text</option>
+                    <option value="image">Image</option>
+                </select>
+            </td>
+            <td class="front_side" data-attribute-name="title">
+                <input id="front_title" name="front_title" required>
+            </td>
+            <td class="front_side" data-attribute-name="description">
+                <input id="front_description" name="front_description">
+            </td>
+        </template>
+
+        <template id="delete_card_button_template">
+            <td>
+                <button type="button">
+                    <img width="12" height="12" src="img/delete-bin-64px.png" alt="Delete ingredient">
+                </button>
+            </td>
         </template>
     </body>
