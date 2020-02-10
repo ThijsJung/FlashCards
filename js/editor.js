@@ -53,8 +53,8 @@ document.addEventListener('DOMContentLoaded', function () {
         cardRow.id = cardId;
 
         // Clone the front, back and delete button. Activate the button
-        let frontSide = cardSideTemplate.content.cloneNode(true);
-        let backSide = cardSideTemplate.content.cloneNode(true);
+        let frontSide = addEmptySide("front_side");
+        let backSide = addEmptySide("back_side");
         let deleteCardButton = deleteCardButtonTemplate.content.cloneNode(true);
         deleteCardButton.querySelector("button").addEventListener("click", () => { deleteCard(cardId); }, false);
 
@@ -67,6 +67,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return cardId;
     }
 
+    function addEmptySide(sideClassName) {
+        let side = cardSideTemplate.content.cloneNode(true);
+        side.querySelectorAll("td").forEach(element => {
+            element.className = sideClassName;
+        });
+        return side;
+    }
+
     function deleteCard(cardId) {
         let card = document.getElementById(cardId);
         card.remove();
@@ -74,13 +82,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function populateCard(cardId, cardData) {
         let card = document.getElementById(cardId);
-        let titles = card.getElementsByClassName("front_title");
-        titles[0].value = cardData[0].content.title;
-        titles[1].value = cardData[1].content.title;
-        let descriptions = card.getElementsByClassName("front_description");
-        descriptions[0].value = cardData[0].content.description;
-        descriptions[1].value = cardData[1].content.description;
-
+        populateSide(card, "front_side", cardData[0]);
+        populateSide(card, "back_side", cardData[1]);
+    }
+    
+    function populateSide(card, sideClassName, sideData) {
+        let side = card.getElementsByClassName(sideClassName);
+        side[1].querySelector("input").value = sideData.content.title;
+        side[2].querySelector("input").value = sideData.content.description;
     }
 
     function loadDeck(deck) {
@@ -91,38 +100,40 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function saveDeck() {
-        let deck = [];
-        for (let cardRow of cards.rows) {
-            let card = {};
-            const frontDetails = cardRow.getElementsByClassName("front_side");
-            card.front = {};
-            for (let i = 0; i < frontDetails.length; i++) {
-                let frontDetail = frontDetails[i]
-                let frontDetailChild = frontDetail.firstElementChild;
-                let frontName = frontDetail.dataset.attributeName;
-                card.front[frontName] = frontDetailChild.value;
-            }
-
-            const backDetails = cardRow.getElementsByClassName("back_side");
-            card.back = {};
-            for (let i = 0; i < backDetails.length; i++) {
-                let backDetail = backDetails[i]
-                let backDetailChild = backDetail.firstElementChild;
-                let frontName = backDetail.dataset.attributeName;
-                card.back[frontName] = backDetailChild.value;
-            }
-
-            deck.push(card);
+    function parseDataFromSide(cardRow, sideClassName) {
+        const sideDetails = cardRow.getElementsByClassName(sideClassName);
+        let side = {
+            "type": sideDetails[0].firstElementChild.value,
+            "content": {}
+        };
+        for (let i = 1; i < sideDetails.length; i++) {
+            let sideDetail = sideDetails[i];
+            let frontName = sideDetail.dataset.attributeName;
+            side.content[frontName] = sideDetail.firstElementChild.value;
         }
-
-        savedDeck.innerHTML = "Saving your deck is not yet supported. Here's the JSON" + "<br>";
-        for (let card of deck) {
-            savedDeck.innerHTML += JSON.stringify(card) + "<br>";
-        }
+        return side;
     }
+
+    function saveDeck() {
+        let deck = {};
+        deck.name = "My sweet deck";
+        deck.cards = [];
+        for (let cardRow of cards.rows) {
+            let card = [];
+            card.push(parseDataFromSide(cardRow, "front_side"));
+            card.push(parseDataFromSide(cardRow, "back_side"));
+            deck.cards.push(card);
+        }
+        displaySavedDeck(deck);
+    }
+    
+    function displaySavedDeck(deck) {
+        savedDeck.innerHTML = "Saving your deck is not yet supported. Here's the JSON" + "<br>";
+        savedDeck.innerHTML += JSON.stringify(deck) + "<br>";
+    }
+
     addCardButton.addEventListener("click", addEmptyCard, false);
     saveDeckButton.addEventListener("click", saveDeck, false);
     loadDeckButton.addEventListener("click", loadDeck, false);
-    addEmptyCard();
+    // addEmptyCard();
 });

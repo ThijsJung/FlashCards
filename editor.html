@@ -30,17 +30,17 @@
         <div id="saved_deck"></div>
 
         <template id="card_side_template">
-            <td class="front_side" data-attribute-name="type">
-                <select id="front_type">
+            <td data-attribute-name="type">
+                <select class="side_type">
                     <option value="text">Text</option>
                     <option value="image">Image</option>
                 </select>
             </td>
-            <td class="front_side" data-attribute-name="title">
-                <input class="front_title" name="front_title" placeholder="Title" required>
+            <td data-attribute-name="title">
+                <input placeholder="Title" required>
             </td>
-            <td class="front_side" data-attribute-name="description">
-                <input class="front_description" name="front_description" placeholder="Description">
+            <td data-attribute-name="description">
+                <input placeholder="Description">
             </td>
         </template>
 
