@@ -54,25 +54,24 @@ document.addEventListener('DOMContentLoaded', function () {
         const cardCount = cards.childElementCount;
         const cardId = "card_" + cardCount;
         card.id = cardId;
-        console.log(cardId);
 
         // Clone the front, back and delete button. Activate the button
         let front = textSideTemplate.content.cloneNode(true);
         const frontSideId = "side_" + cardCount * 2;
         front.querySelector("span").id = frontSideId;
         const frontSideTypeSelectButton = front.querySelector("select");
-        frontSideTypeSelectButton.addEventListener("change", function() {
+        frontSideTypeSelectButton.addEventListener("change", function () {
             updateSideDetails(this.value, frontSideId),
-            false
+                false
         });
-        
+
         const back = textSideTemplate.content.cloneNode(true);
         const backSideId = "side_" + (cardCount * 2 + 1);
         back.querySelector("span").id = backSideId;
         const backSideTypeSelectButton = back.querySelector("select");
-        backSideTypeSelectButton.addEventListener("change", function() {
+        backSideTypeSelectButton.addEventListener("change", function () {
             updateSideDetails(this.value, backSideId),
-            false
+                false
         });
 
         const deleteCardButton = deleteCardButtonTemplate.content.cloneNode(true);
@@ -82,11 +81,11 @@ document.addEventListener('DOMContentLoaded', function () {
         card.appendChild(back);
         card.appendChild(deleteCardButton);
         cards.appendChild(card);
+
+        return cardId;
     }
 
     function updateSideDetails(sideType, sideId) {
-        console.log("updateSideDetails");
-        console.log(sideId);
         let side = document.getElementById(sideId);
         let sideDetails = null;
         if (sideType == 'text') {
@@ -96,11 +95,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const frontSideTypeSelectButton = sideDetails.querySelector("select");
         frontSideTypeSelectButton.value = sideType;
-        frontSideTypeSelectButton.addEventListener("change", function() {
+        frontSideTypeSelectButton.addEventListener("change", function () {
             updateSideDetails(this.value, sideId),
-            false
+                false
         });
-        console.log(sideDetails);
         side.innerHTML = "";
         side.appendChild(sideDetails);
     }
@@ -112,14 +110,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function populateCard(cardId, cardData) {
         let card = document.getElementById(cardId);
-        populateSide(card, "front_side", cardData[0]);
-        populateSide(card, "back_side", cardData[1]);
+        populateSide(card.children[0], cardData[0]);
+        populateSide(card.children[1], cardData[1]);
     }
-    
-    function populateSide(card, sideClassName, sideData) {
-        let side = card.getElementsByClassName(sideClassName);
-        side[1].querySelector("input").value = sideData.content.title;
-        side[2].querySelector("input").value = sideData.content.description;
+
+    function populateSide(card, sideData) {
+        let side = card.children;
+        side[1].value = sideData.content.title;
+        side[2].value = sideData.content.description;
     }
 
     function loadDeck(deck) {
@@ -157,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         displaySavedDeck(deck);
     }
-    
+
     function displaySavedDeck(deck) {
         savedDeck.innerHTML = "Saving your deck is not yet supported. Here's the JSON" + "<br>";
         savedDeck.innerHTML += JSON.stringify(deck) + "<br>";
@@ -166,5 +164,6 @@ document.addEventListener('DOMContentLoaded', function () {
     addCardButton.addEventListener("click", addEmptyCard, false);
     saveDeckButton.addEventListener("click", saveDeck, false);
     loadDeckButton.addEventListener("click", loadDeck, false);
-    addEmptyCard();
+    // addEmptyCard();
+    loadDeck();
 });
