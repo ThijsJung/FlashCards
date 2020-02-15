@@ -39,7 +39,9 @@ const previouslySavedDeck = {
 
 document.addEventListener('DOMContentLoaded', function () {
     const cards = document.getElementById("cards");
-    const cardSideTemplate = document.getElementById("card_side_template");
+    const sideTemplate = document.getElementById("side_template");
+    const textSideTemplate = document.getElementById("text_side_template");
+    const imgSideTemplate = document.getElementById("img_side_template");
     const deleteCardButtonTemplate = document.getElementById("delete_card_button_template");
     const addCardButton = document.getElementById("add_card_button");
     const saveDeckButton = document.getElementById("save_deck_button");
@@ -47,32 +49,60 @@ document.addEventListener('DOMContentLoaded', function () {
     const savedDeck = document.getElementById("saved_deck");
 
     function addEmptyCard() {
-        let cardRow = document.createElement("tr");
+        const card = document.createElement("div");
         // Add id to the card so it can be deleted.
-        let cardId = "card_" + cards.rows.length;
-        cardRow.id = cardId;
+        const cardCount = cards.childElementCount;
+        const cardId = "card_" + cardCount;
+        card.id = cardId;
+        console.log(cardId);
 
         // Clone the front, back and delete button. Activate the button
-        let frontSide = addEmptySide("front_side");
-        let backSide = addEmptySide("back_side");
-        let deleteCardButton = deleteCardButtonTemplate.content.cloneNode(true);
+        let front = textSideTemplate.content.cloneNode(true);
+        const frontSideId = "side_" + cardCount * 2;
+        front.querySelector("span").id = frontSideId;
+        const frontSideTypeSelectButton = front.querySelector("select");
+        frontSideTypeSelectButton.addEventListener("change", function() {
+            updateSideDetails(this.value, frontSideId),
+            false
+        });
+        
+        const back = textSideTemplate.content.cloneNode(true);
+        const backSideId = "side_" + (cardCount * 2 + 1);
+        back.querySelector("span").id = backSideId;
+        const backSideTypeSelectButton = back.querySelector("select");
+        backSideTypeSelectButton.addEventListener("change", function() {
+            updateSideDetails(this.value, backSideId),
+            false
+        });
+
+        const deleteCardButton = deleteCardButtonTemplate.content.cloneNode(true);
         deleteCardButton.querySelector("button").addEventListener("click", () => { deleteCard(cardId); }, false);
 
-        // Add them to the DOM.
-        cardRow.appendChild(frontSide);
-        cardRow.appendChild(backSide);
-        cardRow.appendChild(deleteCardButton);
-        cards.appendChild(cardRow);
-
-        return cardId;
+        card.appendChild(front);
+        card.appendChild(back);
+        card.appendChild(deleteCardButton);
+        cards.appendChild(card);
     }
 
-    function addEmptySide(sideClassName) {
-        let side = cardSideTemplate.content.cloneNode(true);
-        side.querySelectorAll("td").forEach(element => {
-            element.className = sideClassName;
+    function updateSideDetails(sideType, sideId) {
+        console.log("updateSideDetails");
+        console.log(sideId);
+        let side = document.getElementById(sideId);
+        let sideDetails = null;
+        if (sideType == 'text') {
+            sideDetails = textSideTemplate.content.cloneNode(true);
+        } else if (sideType == 'img') {
+            sideDetails = imgSideTemplate.content.cloneNode(true);
+        }
+        const frontSideTypeSelectButton = sideDetails.querySelector("select");
+        frontSideTypeSelectButton.value = sideType;
+        frontSideTypeSelectButton.addEventListener("change", function() {
+            updateSideDetails(this.value, sideId),
+            false
         });
-        return side;
+        console.log(sideDetails);
+        side.innerHTML = "";
+        side.appendChild(sideDetails);
     }
 
     function deleteCard(cardId) {
@@ -93,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function loadDeck(deck) {
-        console.log("Loading...");
+        // console.log("Loading...");
         for (let cardData of previouslySavedDeck.cards) {
             let cardId = addEmptyCard();
             populateCard(cardId, cardData);
@@ -102,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function parseDataFromSide(cardRow, sideClassName) {
         const sideDetails = cardRow.getElementsByClassName(sideClassName);
+        // console.log(sideDetails);
         let side = {
             "type": sideDetails[0].firstElementChild.value,
             "content": {}
@@ -135,5 +166,5 @@ document.addEventListener('DOMContentLoaded', function () {
     addCardButton.addEventListener("click", addEmptyCard, false);
     saveDeckButton.addEventListener("click", saveDeck, false);
     loadDeckButton.addEventListener("click", loadDeck, false);
-    // addEmptyCard();
+    addEmptyCard();
 });
