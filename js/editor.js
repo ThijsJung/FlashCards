@@ -122,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function loadDeck(deck) {
+        cards.innerHTML = "";
         for (let cardData of previouslySavedDeck.cards) {
             let cardId = addEmptyCard();
             populateCard(cardId, cardData);
