@@ -164,6 +164,6 @@ document.addEventListener('DOMContentLoaded', function () {
     addCardButton.addEventListener("click", addEmptyCard, false);
     saveDeckButton.addEventListener("click", saveDeck, false);
     loadDeckButton.addEventListener("click", loadDeck, false);
-    // addEmptyCard();
-    loadDeck();
+    addEmptyCard();
+    // loadDeck();
 });
