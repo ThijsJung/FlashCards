@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function addEmptyCard() {
         const card = document.createElement("div");
+        card.className = "card";
         // Add id to the card so it can be deleted.
         const cardCount = cards.childElementCount;
         const cardId = "card_" + cardCount;
@@ -121,37 +122,36 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function loadDeck(deck) {
-        // console.log("Loading...");
         for (let cardData of previouslySavedDeck.cards) {
             let cardId = addEmptyCard();
             populateCard(cardId, cardData);
         }
     }
 
-    function parseDataFromSide(cardRow, sideClassName) {
-        const sideDetails = cardRow.getElementsByClassName(sideClassName);
-        // console.log(sideDetails);
-        let side = {
-            "type": sideDetails[0].firstElementChild.value,
+    function parseDataFromSide(side) {
+        const sideChildren = side.children;
+        let sideData = {
+            "type": sideChildren[0].value,
             "content": {}
         };
-        for (let i = 1; i < sideDetails.length; i++) {
-            let sideDetail = sideDetails[i];
+        for (let i = 1; i < sideChildren.length; i++) {
+            let sideDetail = sideChildren[i];
             let frontName = sideDetail.dataset.attributeName;
-            side.content[frontName] = sideDetail.firstElementChild.value;
+            sideData.content[frontName] = sideDetail.value;
         }
-        return side;
+        return sideData;
     }
 
     function saveDeck() {
         let deck = {};
         deck.name = "My sweet deck";
         deck.cards = [];
-        for (let cardRow of cards.rows) {
-            let card = [];
-            card.push(parseDataFromSide(cardRow, "front_side"));
-            card.push(parseDataFromSide(cardRow, "back_side"));
-            deck.cards.push(card);
+        for (let card of cards.getElementsByClassName("card")) {
+            const sides = card.getElementsByTagName("span");
+            const cardData = [];
+            cardData.push(parseDataFromSide(sides[0]));
+            cardData.push(parseDataFromSide(sides[1]));
+            deck.cards.push(cardData);
         }
         displaySavedDeck(deck);
     }
